@@ -14,21 +14,21 @@ import { startCase } from 'lodash'
  */
 
 function configure(pkg, env, target) {
-  const isProd = env === 'production';
-  const isUmd = target === 'umd';
-  const isModule = target === 'module';
-  const isCommonJs = target === 'cjs';
-  const input = `packages/${pkg.subname}/src/index.tsx`;
+  const isProd = env === 'production'
+  const isUmd = target === 'umd'
+  const isModule = target === 'module'
+  const isCommonJs = target === 'cjs'
+  const input = `packages/${pkg.subname}/src/index.tsx`
   const deps = []
     .concat(pkg.dependencies ? Object.keys(pkg.dependencies) : [])
-    .concat(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []);
+    .concat(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [])
 
   // Stop Rollup from warning about circular dependencies.
-  const onwarn = warning => {
+  const onwarn = (warning) => {
     if (warning.code !== 'CIRCULAR_DEPENDENCY') {
       console.warn(`(!) ${warning.message}`) // eslint-disable-line no-console
     }
-  };
+  }
 
   const plugins = [
     // Allow Rollup to resolve modules from `node_modules`, since it only
@@ -83,15 +83,15 @@ function configure(pkg, env, target) {
           isUmd
             ? { modules: false }
             : {
-              exclude: [
-                '@babel/plugin-transform-regenerator',
-                '@babel/transform-async-to-generator',
-              ],
-              modules: false,
-              targets: {
-                esmodules: isModule,
+                exclude: [
+                  '@babel/plugin-transform-regenerator',
+                  '@babel/transform-async-to-generator',
+                ],
+                modules: false,
+                targets: {
+                  esmodules: isModule,
+                },
               },
-            },
         ],
         '@babel/preset-react',
       ],
@@ -101,9 +101,9 @@ function configure(pkg, env, target) {
           isUmd
             ? {}
             : {
-              regenerator: false,
-              useESModules: isModule,
-            },
+                regenerator: false,
+                useESModules: isModule,
+              },
         ],
         '@babel/plugin-proposal-class-properties',
       ],
@@ -115,7 +115,7 @@ function configure(pkg, env, target) {
     // Only minify the output in production, since it is very slow. And only
     // for UMD builds, since modules will be bundled by the consumer.
     isUmd && isProd && terser(),
-  ].filter(Boolean);
+  ].filter(Boolean)
 
   if (isUmd) {
     return {
@@ -129,8 +129,8 @@ function configure(pkg, env, target) {
         name: startCase(pkg.name).replace(/ /g, ''),
         globals: pkg.umdGlobals,
       },
-      external: id => {
-        return (pkg.umdGlobals || []).find(dep => dep.startsWith(id));
+      external: (id) => {
+        return (pkg.umdGlobals || []).find((dep) => dep.startsWith(id))
       },
     }
   }
@@ -151,8 +151,8 @@ function configure(pkg, env, target) {
       // We need to explicitly state which modules are external, meaning that
       // they are present at runtime. In the case of non-UMD configs, this means
       // all non-Slate packages.
-      external: id => {
-        return !!deps.find(dep => dep === id || id.startsWith(`${dep}/`))
+      external: (id) => {
+        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`))
       },
     }
   }
@@ -172,8 +172,8 @@ function configure(pkg, env, target) {
       // We need to explicitly state which modules are external, meaning that
       // they are present at runtime. In the case of non-UMD configs, this means
       // all non-Slate packages.
-      external: id => {
-        return !!deps.find(dep => dep === id || id.startsWith(`${dep}/`))
+      external: (id) => {
+        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`))
       },
     }
   }
@@ -184,7 +184,7 @@ function configure(pkg, env, target) {
  */
 
 function factory(pkg, options = {}) {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production'
   return [
     configure(pkg, 'development', 'cjs', options),
     configure(pkg, 'development', 'module', options),
@@ -197,6 +197,4 @@ function factory(pkg, options = {}) {
  * Config.
  */
 
-export default [
-  ...factory(require('../packages/editor/package.json')),
-]
+export default [...factory(require('../packages/editor/package.json'))]
