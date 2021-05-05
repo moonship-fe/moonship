@@ -18,8 +18,10 @@ function configure(pkg, env, target) {
   const isUmd = target === 'umd';
   const isModule = target === 'module';
   const isCommonJs = target === 'cjs';
-  const input = `src/index.js`;
+  const input = `packages/${pkg.subname}/src/index.tsx`;
   const deps = []
+    .concat(pkg.dependencies ? Object.keys(pkg.dependencies) : [])
+    .concat(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []);
 
   // Stop Rollup from warning about circular dependencies.
   const onwarn = warning => {
@@ -35,13 +37,13 @@ function configure(pkg, env, target) {
       browser: true,
     }),
 
-    // typescript({
-    //   abortOnError: false,
-    //   tsconfig: `./packages/${pkg.name}/tsconfig.json`,
-    //   // COMPAT: Without this flag sometimes the declarations are not updated.
-    //   // clean: isProd ? true : false,
-    //   clean: true,
-    // }),
+    typescript({
+      abortOnError: false,
+      tsconfig: `./packages/${pkg.subname}/tsconfig.json`,
+      // COMPAT: Without this flag sometimes the declarations are not updated.
+      // clean: isProd ? true : false,
+      clean: true,
+    }),
 
     // Allow Rollup to resolve CommonJS modules, since it only resolves ES2015
     // modules by default.
@@ -75,7 +77,7 @@ function configure(pkg, env, target) {
       include: [`src/**`],
       extensions: ['.js', '.ts', '.tsx'],
       presets: [
-        // '@babel/preset-typescript',
+        '@babel/preset-typescript',
         [
           '@babel/preset-env',
           isUmd
@@ -122,12 +124,14 @@ function configure(pkg, env, target) {
       onwarn,
       output: {
         format: 'umd',
-        file: `${isProd ? pkg.umdMin : pkg.umd}`,
+        file: `packages/${pkg.subname}/${isProd ? pkg.umdMin : pkg.umd}`,
         exports: 'named',
         name: startCase(pkg.name).replace(/ /g, ''),
         globals: pkg.umdGlobals,
       },
-      external: Object.keys(pkg.umdGlobals || {}),
+      external: id => {
+        return (pkg.umdGlobals || []).find(dep => dep.startsWith(id));
+      },
     }
   }
 
@@ -138,7 +142,7 @@ function configure(pkg, env, target) {
       onwarn,
       output: [
         {
-          file: `${pkg.main}`,
+          file: `packages/${pkg.subname}/${pkg.main}`,
           format: 'cjs',
           exports: 'named',
           sourcemap: true,
@@ -160,7 +164,7 @@ function configure(pkg, env, target) {
       onwarn,
       output: [
         {
-          file: `${pkg.module}`,
+          file: `packages/${pkg.subname}/${pkg.module}`,
           format: 'es',
           sourcemap: true,
         },
@@ -194,5 +198,5 @@ function factory(pkg, options = {}) {
  */
 
 export default [
-  ...factory(),
+  ...factory(require('../packages/editor/package.json')),
 ]
