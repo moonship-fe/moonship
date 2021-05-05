@@ -10,7 +10,7 @@ import {
   Path,
 } from '@moonship-fe/slate'
 import getDirection from 'direction'
-import { HistoryEditor } from 'slate-history'
+import { HistoryEditor } from '@moonship-fe/slate-history'
 import throttle from 'lodash/throttle'
 import scrollIntoView from 'scroll-into-view-if-needed'
 

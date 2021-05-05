@@ -1,5 +1,6 @@
 {
   "name": "@moonship-fe/slate-react",
+  "subname": "slate-react",
   "description": "Tools for building completely customizable richtext editors with React.",
   "version": "0.62.0",
   "license": "MIT",
@@ -33,10 +34,7 @@
     "react-dom": ">=16.8.0",
     "@moonship-fe/slate": ">=0.55.0"
   },
-  "umdGlobals": {
-    "react": "React",
-    "slate": "Slate"
-  },
+  "umdGlobals": ["react", "slate"],
   "keywords": [
     "canvas",
     "contenteditable",

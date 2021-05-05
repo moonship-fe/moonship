@@ -1,5 +1,6 @@
 {
   "name": "@moonship-fe/slate",
+  "subname": "slate",
   "description": "A completely customizable framework for building rich text editors.",
   "version": "0.62.0",
   "license": "MIT",

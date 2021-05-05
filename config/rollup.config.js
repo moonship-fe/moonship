@@ -1,34 +1,34 @@
-import babel from 'rollup-plugin-babel'
-import builtins from 'rollup-plugin-node-builtins'
-import commonjs from 'rollup-plugin-commonjs'
-import globals from 'rollup-plugin-node-globals'
-import json from 'rollup-plugin-json'
-import replace from 'rollup-plugin-replace'
-import resolve from 'rollup-plugin-node-resolve'
-import typescript from 'rollup-plugin-typescript2'
-import { terser } from 'rollup-plugin-terser'
-import { startCase } from 'lodash'
+import babel from 'rollup-plugin-babel';
+import builtins from 'rollup-plugin-node-builtins';
+import commonjs from 'rollup-plugin-commonjs';
+import globals from 'rollup-plugin-node-globals';
+import json from 'rollup-plugin-json';
+import replace from 'rollup-plugin-replace';
+import resolve from 'rollup-plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2';
+import { terser } from 'rollup-plugin-terser';
+import { startCase } from 'lodash';
 
 /**
  * Return a Rollup configuration for a `pkg` with `env` and `target`.
  */
 
 function configure(pkg, env, target) {
-  const isProd = env === 'production'
-  const isUmd = target === 'umd'
-  const isModule = target === 'module'
-  const isCommonJs = target === 'cjs'
-  const input = `packages/${pkg.subname}/src/index.tsx`
+  const isProd = env === 'production';
+  const isUmd = target === 'umd';
+  const isModule = target === 'module';
+  const isCommonJs = target === 'cjs';
+  const input = `packages/${pkg.subname}/src/index.ts`;
   const deps = []
     .concat(pkg.dependencies ? Object.keys(pkg.dependencies) : [])
-    .concat(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [])
+    .concat(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []);
 
   // Stop Rollup from warning about circular dependencies.
   const onwarn = (warning) => {
     if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-      console.warn(`(!) ${warning.message}`) // eslint-disable-line no-console
+      console.warn(`(!) ${warning.message}`); // eslint-disable-line no-console
     }
-  }
+  };
 
   const plugins = [
     // Allow Rollup to resolve modules from `node_modules`, since it only
@@ -115,7 +115,7 @@ function configure(pkg, env, target) {
     // Only minify the output in production, since it is very slow. And only
     // for UMD builds, since modules will be bundled by the consumer.
     isUmd && isProd && terser(),
-  ].filter(Boolean)
+  ].filter(Boolean);
 
   if (isUmd) {
     return {
@@ -130,9 +130,9 @@ function configure(pkg, env, target) {
         globals: pkg.umdGlobals,
       },
       external: (id) => {
-        return (pkg.umdGlobals || []).find((dep) => dep.startsWith(id))
+        return (pkg.umdGlobals || []).find((dep) => dep.startsWith(id));
       },
-    }
+    };
   }
 
   if (isCommonJs) {
@@ -152,9 +152,9 @@ function configure(pkg, env, target) {
       // they are present at runtime. In the case of non-UMD configs, this means
       // all non-Slate packages.
       external: (id) => {
-        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`))
+        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`));
       },
-    }
+    };
   }
 
   if (isModule) {
@@ -173,9 +173,9 @@ function configure(pkg, env, target) {
       // they are present at runtime. In the case of non-UMD configs, this means
       // all non-Slate packages.
       external: (id) => {
-        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`))
+        return !!deps.find((dep) => dep === id || id.startsWith(`${dep}/`));
       },
-    }
+    };
   }
 }
 
@@ -184,17 +184,23 @@ function configure(pkg, env, target) {
  */
 
 function factory(pkg, options = {}) {
-  const isProd = process.env.NODE_ENV === 'production'
+  const isProd = process.env.NODE_ENV === 'production';
   return [
     configure(pkg, 'development', 'cjs', options),
     configure(pkg, 'development', 'module', options),
     isProd && configure(pkg, 'development', 'umd', options),
     isProd && configure(pkg, 'production', 'umd', options),
-  ].filter(Boolean)
+  ].filter(Boolean);
 }
 
 /**
  * Config.
  */
 
-export default [...factory(require('../packages/editor/package.json'))]
+export default [
+  // ...factory(require('../packages/editor/package.json')),
+  ...factory(require('../packages/slate/package.json')),
+  ...factory(require('../packages/slate-history/package.json')),
+  ...factory(require('../packages/slate-hyperscript/package.json')),
+  ...factory(require('../packages/slate-react/package.json')),
+];

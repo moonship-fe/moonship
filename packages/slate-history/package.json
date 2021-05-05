@@ -1,5 +1,6 @@
 {
   "name": "@moonship-fe/slate-history",
+  "subname": "slate-history",
   "description": "An operation-based history implementation for Slate editors.",
   "version": "0.62.0",
   "license": "MIT",
@@ -24,9 +25,7 @@
   "peerDependencies": {
     "@moonship-fe/slate": ">=0.55.0"
   },
-  "umdGlobals": {
-    "slate": "Slate"
-  },
+  "umdGlobals": ["slate"],
   "keywords": [
     "editor",
     "history",

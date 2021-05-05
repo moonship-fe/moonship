@@ -1,5 +1,6 @@
 {
   "name": "@moonship-fe/slate-hyperscript",
+  "subname": "slate-hyperscript",
   "description": "A hyperscript helper for creating Slate documents.",
   "version": "0.62.0",
   "license": "MIT",
@@ -22,9 +23,7 @@
   "peerDependencies": {
     "@moonship-fe/slate": ">=0.55.0"
   },
-  "umdGlobals": {
-    "slate": "Slate"
-  },
+  "umdGlobals": ["slate"],
   "keywords": [
     "deserialize",
     "h",
