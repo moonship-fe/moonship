@@ -7,13 +7,14 @@
     "packages/*"
   ],
   "scripts": {
-    "build:rollup": "NODE_ENV=production rollup --config ./config/rollup.config.js",
+    "build:rollup": "rollup --config ./config/rollup.config.js",
     "serve": "cd ./site && next",
     "fix": "yarn fix:prettier && yarn fix:eslint",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:prettier": "yarn lint:prettier --write",
     "lint:eslint": "eslint \"./{packages,site}/**/*.{js,jsx,ts,tsx}\"",
-    "lint:prettier": "prettier --check \"**/*.{css,md,js,jsx,json,ts,tsx}\""
+    "lint:prettier": "prettier --check \"**/*.{css,md,js,jsx,json,ts,tsx}\"",
+    "watch": "yarn build:rollup --watch"
   },
   "keywords": [],
   "author": "",
