@@ -533,6 +533,14 @@ export const Editable = (props: EditableProps) => {
             // Allow for passed-in styles to override anything.
             ...style,
           }}
+          onInput={
+            useCallback(
+              () => {
+                  document.getElementById('moonship-placeholder').style.display = 'none'
+              },
+              []
+            )
+          }
           onBeforeInput={useCallback(
             (event: React.FormEvent<HTMLDivElement>) => {
               // COMPAT: Certain browsers don't support the `beforeinput` event, so we
@@ -1074,6 +1082,7 @@ export const Editable = (props: EditableProps) => {
  */
 export type RenderPlaceholderProps = {
   children: any
+  className: string
   attributes: {
     'data-slate-placeholder': boolean
     dir?: 'rtl'
@@ -1090,7 +1099,11 @@ export type RenderPlaceholderProps = {
 export const DefaultPlaceholder = ({
   attributes,
   children,
-}: RenderPlaceholderProps) => <span {...attributes}>{children}</span>
+}: RenderPlaceholderProps) => (
+  <span id={'moonship-placeholder'} {...attributes}>
+    {children}
+  </span>
+);
 
 /**
  * A default memoized decorate function.
