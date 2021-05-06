@@ -2,7 +2,7 @@
   "name": "@moonship-fe/editor",
   "description": "A markdown richtext editor base on slate.js",
   "subname": "editor",
-  "version": "0.62.0",
+  "version": "0.0.1",
   "license": "MIT",
   "repository": "git://github.com/moonship-fe/moonship.git",
   "main": "dist/index.js",
