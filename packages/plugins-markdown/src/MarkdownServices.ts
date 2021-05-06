@@ -1,3 +1,3 @@
-class MarkdownServices {
-  
+export default class MarkdownServices {
+  constructor() {}
 }

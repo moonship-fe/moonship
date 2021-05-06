@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.14.0",
     "@moonship-fe/core": "*",
     "@moonship-fe/editor": "*",
     "@moonship-fe/slate": "*",
