@@ -21,26 +21,5 @@
     "is-plain-object": "^3.0.0",
     "lodash": "^4.17.4",
     "tiny-warning": "^1.0.3"
-  },
-  "keywords": [
-    "canvas",
-    "contenteditable",
-    "custom",
-    "document",
-    "edit",
-    "editor",
-    "html",
-    "immutable",
-    "markdown",
-    "medium",
-    "paper",
-    "react",
-    "rich",
-    "richtext",
-    "richtext",
-    "slate",
-    "text",
-    "wysiwyg",
-    "wysiwym"
-  ]
+  }
 }
