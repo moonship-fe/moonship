@@ -1,4 +1,4 @@
-import { Text } from '@moonship-fe/slate'
+import { Text } from '@moonship-fe/slate';
 
 export const input = {
   textNodeA: {
@@ -11,10 +11,10 @@ export const input = {
     bold: true,
     italic: { origin: 'inherited', value: false },
   },
-}
+};
 
 export const test = ({ textNodeA, textNodeB }) => {
-  return Text.equals(textNodeA, textNodeB, { loose: true })
-}
+  return Text.equals(textNodeA, textNodeB, { loose: true });
+};
 
-export const output = true
+export const output = true;

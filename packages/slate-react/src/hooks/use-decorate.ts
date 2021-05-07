@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react'
-import { Range, NodeEntry } from '@moonship-fe/slate'
+import { createContext, useContext } from 'react';
+import { Range, NodeEntry } from '@moonship-fe/slate';
 
 /**
  * A React context for sharing the `decorate` prop of the editable.
@@ -7,12 +7,12 @@ import { Range, NodeEntry } from '@moonship-fe/slate'
 
 export const DecorateContext = createContext<(entry: NodeEntry) => Range[]>(
   () => []
-)
+);
 
 /**
  * Get the current `decorate` prop of the editable.
  */
 
 export const useDecorate = (): ((entry: NodeEntry) => Range[]) => {
-  return useContext(DecorateContext)
-}
+  return useContext(DecorateContext);
+};

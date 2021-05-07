@@ -29,7 +29,7 @@ const MarkdownShortcutsExample = () => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const editor = useMemo(
     () => withShortcuts(withReact(withHistory(createEditor()))),
-    [],
+    []
   );
   return (
     <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
@@ -164,8 +164,8 @@ const initialValue: Descendant[] = [
     type: 'paragraph',
     children: [
       {
-        text: ''
-      }
+        text: '',
+      },
     ],
   },
 ];

@@ -1,14 +1,14 @@
 /** @jsx jsx */
-import { Editor } from '@moonship-fe/slate'
-import { jsx } from '../../..'
+import { Editor } from '@moonship-fe/slate';
+import { jsx } from '../../..';
 
 export const input = (
   <editor>
     <block>one</block>
     <block>two</block>
   </editor>
-)
-export const test = editor => {
+);
+export const test = (editor) => {
   return Editor.point(
     editor,
     {
@@ -16,6 +16,6 @@ export const test = editor => {
       focus: { path: [0, 1], offset: 2 },
     },
     { edge: 'start' }
-  )
-}
-export const output = { path: [0, 0], offset: 1 }
+  );
+};
+export const output = { path: [0, 0], offset: 1 };

@@ -1,4 +1,4 @@
-import { Node } from '@moonship-fe/slate'
+import { Node } from '@moonship-fe/slate';
 
 export const input = [
   {
@@ -6,8 +6,8 @@ export const input = [
     selection: null,
   },
   'a string',
-]
-export const test = value => {
-  return Node.isNodeList(value)
-}
-export const output = false
+];
+export const test = (value) => {
+  return Node.isNodeList(value);
+};
+export const output = false;

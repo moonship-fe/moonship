@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx } from '@moonship-fe/slate-hyperscript'
-import { Transforms, Editor } from '@moonship-fe/slate'
+import { jsx } from '@moonship-fe/slate-hyperscript';
+import { Transforms, Editor } from '@moonship-fe/slate';
 
 export const input = (
   <editor>
@@ -8,9 +8,9 @@ export const input = (
       a<cursor />
     </element>
   </editor>
-)
+);
 
-Transforms.setSelection(input, { custom: 123 })
+Transforms.setSelection(input, { custom: 123 });
 
 export const operations = [
   {
@@ -18,7 +18,7 @@ export const operations = [
     oldProperties: {},
     newProperties: { custom: null },
   },
-]
+];
 
 export const output = (
   <editor>
@@ -26,4 +26,4 @@ export const output = (
       a<cursor />
     </element>
   </editor>
-)
+);

@@ -1,6 +1,6 @@
 /** @jsx jsx  */
-import { Node } from '@moonship-fe/slate'
-import { jsx } from '@moonship-fe/slate-hyperscript'
+import { Node } from '@moonship-fe/slate';
+import { jsx } from '@moonship-fe/slate-hyperscript';
 
 export const input = (
   <editor>
@@ -8,12 +8,12 @@ export const input = (
       <text />
     </element>
   </editor>
-)
-export const test = value => {
-  return Node.get(value, [0])
-}
+);
+export const test = (value) => {
+  return Node.get(value, [0]);
+};
 export const output = (
   <element>
     <text />
   </element>
-)
+);

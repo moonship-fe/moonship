@@ -1,1 +1,1 @@
-describe('slate-react', () => {})
+describe('slate-react', () => {});

@@ -17,13 +17,13 @@ type ExtendableTypes =
   | 'RemoveTextOperation'
   | 'SetNodeOperation'
   | 'SetSelectionOperation'
-  | 'SplitNodeOperation'
+  | 'SplitNodeOperation';
 
 export interface CustomTypes {
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
 export type ExtendedType<
   K extends ExtendableTypes,
   B
-> = unknown extends CustomTypes[K] ? B : CustomTypes[K]
+> = unknown extends CustomTypes[K] ? B : CustomTypes[K];

@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from '@moonship-fe/slate'
-import { jsx } from '../../../..'
+import { Editor } from '@moonship-fe/slate';
+import { jsx } from '../../../..';
 
 export const input = (
   <editor>
@@ -8,8 +8,8 @@ export const input = (
     <block>two</block>
     <block>three</block>
   </editor>
-)
-export const test = editor => {
+);
+export const test = (editor) => {
   return Array.from(
     Editor.positions(editor, {
       at: {
@@ -17,8 +17,8 @@ export const test = editor => {
         focus: { path: [2, 0], offset: 2 },
       },
     })
-  )
-}
+  );
+};
 export const output = [
   { path: [0, 0], offset: 1 },
   { path: [0, 0], offset: 2 },
@@ -30,4 +30,4 @@ export const output = [
   { path: [2, 0], offset: 0 },
   { path: [2, 0], offset: 1 },
   { path: [2, 0], offset: 2 },
-]
+];

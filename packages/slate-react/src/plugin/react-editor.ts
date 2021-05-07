@@ -1,6 +1,14 @@
-import { Editor, Node, Path, Point, Range, Transforms, BaseEditor } from '@moonship-fe/slate'
+import {
+  Editor,
+  Node,
+  Path,
+  Point,
+  Range,
+  Transforms,
+  BaseEditor,
+} from '@moonship-fe/slate';
 
-import { Key } from '../utils/key'
+import { Key } from '../utils/key';
 import {
   EDITOR_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -11,7 +19,7 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
   EDITOR_TO_WINDOW,
-} from '../utils/weak-maps'
+} from '../utils/weak-maps';
 import {
   DOMElement,
   DOMNode,
@@ -23,17 +31,17 @@ import {
   isDOMSelection,
   normalizeDOMPoint,
   hasShadowRoot,
-} from '../utils/dom'
-import { IS_CHROME } from '../utils/environment'
+} from '../utils/dom';
+import { IS_CHROME } from '../utils/environment';
 
 /**
  * A React and DOM-specific version of the `Editor` interface.
  */
 
 export interface ReactEditor extends BaseEditor {
-  insertData: (data: DataTransfer) => void
-  setFragmentData: (data: DataTransfer) => void
-  hasRange: (editor: ReactEditor, range: Range) => boolean
+  insertData: (data: DataTransfer) => void;
+  setFragmentData: (data: DataTransfer) => void;
+  hasRange: (editor: ReactEditor, range: Range) => boolean;
 }
 
 export const ReactEditor = {
@@ -42,11 +50,11 @@ export const ReactEditor = {
    */
 
   getWindow(editor: ReactEditor): Window {
-    const window = EDITOR_TO_WINDOW.get(editor)
+    const window = EDITOR_TO_WINDOW.get(editor);
     if (!window) {
-      throw new Error('Unable to find a host window element for this editor')
+      throw new Error('Unable to find a host window element for this editor');
     }
-    return window
+    return window;
   },
 
   /**
@@ -54,14 +62,14 @@ export const ReactEditor = {
    */
 
   findKey(editor: ReactEditor, node: Node): Key {
-    let key = NODE_TO_KEY.get(node)
+    let key = NODE_TO_KEY.get(node);
 
     if (!key) {
-      key = new Key()
-      NODE_TO_KEY.set(node, key)
+      key = new Key();
+      NODE_TO_KEY.set(node, key);
     }
 
-    return key
+    return key;
   },
 
   /**
@@ -69,33 +77,33 @@ export const ReactEditor = {
    */
 
   findPath(editor: ReactEditor, node: Node): Path {
-    const path: Path = []
-    let child = node
+    const path: Path = [];
+    let child = node;
 
     while (true) {
-      const parent = NODE_TO_PARENT.get(child)
+      const parent = NODE_TO_PARENT.get(child);
 
       if (parent == null) {
         if (Editor.isEditor(child)) {
-          return path
+          return path;
         } else {
-          break
+          break;
         }
       }
 
-      const i = NODE_TO_INDEX.get(child)
+      const i = NODE_TO_INDEX.get(child);
 
       if (i == null) {
-        break
+        break;
       }
 
-      path.unshift(i)
-      child = parent
+      path.unshift(i);
+      child = parent;
     }
 
     throw new Error(
       `Unable to find the path for Slate node: ${JSON.stringify(node)}`
-    )
+    );
   },
 
   /**
@@ -103,26 +111,26 @@ export const ReactEditor = {
    */
 
   findDocumentOrShadowRoot(editor: ReactEditor): Document | ShadowRoot {
-    const el = ReactEditor.toDOMNode(editor, editor)
-    const root = el.getRootNode()
+    const el = ReactEditor.toDOMNode(editor, editor);
+    const root = el.getRootNode();
 
     // The below exception will always be thrown for iframes because the document inside an iframe
     // does not inherit it's prototype from the parent document, therefore we return early
-    if (el.ownerDocument !== document) return el.ownerDocument
+    if (el.ownerDocument !== document) return el.ownerDocument;
 
     if (!(root instanceof Document || root instanceof ShadowRoot))
       throw new Error(
         `Unable to find DocumentOrShadowRoot for editor element: ${el}`
-      )
+      );
 
     // COMPAT: Only Chrome implements the DocumentOrShadowRoot mixin for
     // ShadowRoot; other browsers still implement it on the Document
     // interface. (2020/08/08)
     // https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot#Properties
     if (root.getSelection === undefined && el.ownerDocument !== null)
-      return el.ownerDocument
+      return el.ownerDocument;
 
-    return root
+    return root;
   },
 
   /**
@@ -130,7 +138,7 @@ export const ReactEditor = {
    */
 
   isFocused(editor: ReactEditor): boolean {
-    return !!IS_FOCUSED.get(editor)
+    return !!IS_FOCUSED.get(editor);
   },
 
   /**
@@ -138,7 +146,7 @@ export const ReactEditor = {
    */
 
   isReadOnly(editor: ReactEditor): boolean {
-    return !!IS_READ_ONLY.get(editor)
+    return !!IS_READ_ONLY.get(editor);
   },
 
   /**
@@ -146,12 +154,12 @@ export const ReactEditor = {
    */
 
   blur(editor: ReactEditor): void {
-    const el = ReactEditor.toDOMNode(editor, editor)
-    const root = ReactEditor.findDocumentOrShadowRoot(editor)
-    IS_FOCUSED.set(editor, false)
+    const el = ReactEditor.toDOMNode(editor, editor);
+    const root = ReactEditor.findDocumentOrShadowRoot(editor);
+    IS_FOCUSED.set(editor, false);
 
     if (root.activeElement === el) {
-      el.blur()
+      el.blur();
     }
   },
 
@@ -160,12 +168,12 @@ export const ReactEditor = {
    */
 
   focus(editor: ReactEditor): void {
-    const el = ReactEditor.toDOMNode(editor, editor)
-    const root = ReactEditor.findDocumentOrShadowRoot(editor)
-    IS_FOCUSED.set(editor, true)
+    const el = ReactEditor.toDOMNode(editor, editor);
+    const root = ReactEditor.findDocumentOrShadowRoot(editor);
+    IS_FOCUSED.set(editor, true);
 
     if (root.activeElement !== el) {
-      el.focus({ preventScroll: true })
+      el.focus({ preventScroll: true });
     }
   },
 
@@ -174,17 +182,17 @@ export const ReactEditor = {
    */
 
   deselect(editor: ReactEditor): void {
-    const el = ReactEditor.toDOMNode(editor, editor)
-    const { selection } = editor
-    const root = ReactEditor.findDocumentOrShadowRoot(editor)
-    const domSelection = root.getSelection()
+    const el = ReactEditor.toDOMNode(editor, editor);
+    const { selection } = editor;
+    const root = ReactEditor.findDocumentOrShadowRoot(editor);
+    const domSelection = root.getSelection();
 
     if (domSelection && domSelection.rangeCount > 0) {
-      domSelection.removeAllRanges()
+      domSelection.removeAllRanges();
     }
 
     if (selection) {
-      Transforms.deselect(editor)
+      Transforms.deselect(editor);
     }
   },
 
@@ -197,9 +205,9 @@ export const ReactEditor = {
     target: DOMNode,
     options: { editable?: boolean } = {}
   ): boolean {
-    const { editable = false } = options
-    const editorEl = ReactEditor.toDOMNode(editor, editor)
-    let targetEl
+    const { editable = false } = options;
+    const editorEl = ReactEditor.toDOMNode(editor, editor);
+    let targetEl;
 
     // COMPAT: In Firefox, reading `target.nodeType` will throw an error if
     // target is originating from an internal "restricted" element (e.g. a
@@ -208,17 +216,17 @@ export const ReactEditor = {
     try {
       targetEl = (isDOMElement(target)
         ? target
-        : target.parentElement) as HTMLElement
+        : target.parentElement) as HTMLElement;
     } catch (err) {
       if (
         !err.message.includes('Permission denied to access property "nodeType"')
       ) {
-        throw err
+        throw err;
       }
     }
 
     if (!targetEl) {
-      return false
+      return false;
     }
 
     return (
@@ -226,7 +234,7 @@ export const ReactEditor = {
       (!editable ||
         targetEl.isContentEditable ||
         !!targetEl.getAttribute('data-slate-zero-width'))
-    )
+    );
   },
 
   /**
@@ -234,7 +242,7 @@ export const ReactEditor = {
    */
 
   insertData(editor: ReactEditor, data: DataTransfer): void {
-    editor.insertData(data)
+    editor.insertData(data);
   },
 
   /**
@@ -242,7 +250,7 @@ export const ReactEditor = {
    */
 
   setFragmentData(editor: ReactEditor, data: DataTransfer): void {
-    editor.setFragmentData(data)
+    editor.setFragmentData(data);
   },
 
   /**
@@ -252,15 +260,15 @@ export const ReactEditor = {
   toDOMNode(editor: ReactEditor, node: Node): HTMLElement {
     const domNode = Editor.isEditor(node)
       ? EDITOR_TO_ELEMENT.get(editor)
-      : KEY_TO_ELEMENT.get(ReactEditor.findKey(editor, node))
+      : KEY_TO_ELEMENT.get(ReactEditor.findKey(editor, node));
 
     if (!domNode) {
       throw new Error(
         `Cannot resolve a DOM node from Slate node: ${JSON.stringify(node)}`
-      )
+      );
     }
 
-    return domNode
+    return domNode;
   },
 
   /**
@@ -268,51 +276,51 @@ export const ReactEditor = {
    */
 
   toDOMPoint(editor: ReactEditor, point: Point): DOMPoint {
-    const [node] = Editor.node(editor, point.path)
-    const el = ReactEditor.toDOMNode(editor, node)
-    let domPoint: DOMPoint | undefined
+    const [node] = Editor.node(editor, point.path);
+    const el = ReactEditor.toDOMNode(editor, node);
+    let domPoint: DOMPoint | undefined;
 
     // If we're inside a void node, force the offset to 0, otherwise the zero
     // width spacing character will result in an incorrect offset of 1
     if (Editor.void(editor, { at: point })) {
-      point = { path: point.path, offset: 0 }
+      point = { path: point.path, offset: 0 };
     }
 
     // For each leaf, we need to isolate its content, which means filtering
     // to its direct text and zero-width spans. (We have to filter out any
     // other siblings that may have been rendered alongside them.)
-    const selector = `[data-slate-string], [data-slate-zero-width]`
-    const texts = Array.from(el.querySelectorAll(selector))
-    let start = 0
+    const selector = `[data-slate-string], [data-slate-zero-width]`;
+    const texts = Array.from(el.querySelectorAll(selector));
+    let start = 0;
 
     for (const text of texts) {
-      const domNode = text.childNodes[0] as HTMLElement
+      const domNode = text.childNodes[0] as HTMLElement;
 
       if (domNode == null || domNode.textContent == null) {
-        continue
+        continue;
       }
 
-      const { length } = domNode.textContent
-      const attr = text.getAttribute('data-slate-length')
-      const trueLength = attr == null ? length : parseInt(attr, 10)
-      const end = start + trueLength
+      const { length } = domNode.textContent;
+      const attr = text.getAttribute('data-slate-length');
+      const trueLength = attr == null ? length : parseInt(attr, 10);
+      const end = start + trueLength;
 
       if (point.offset <= end) {
-        const offset = Math.min(length, Math.max(0, point.offset - start))
-        domPoint = [domNode, offset]
-        break
+        const offset = Math.min(length, Math.max(0, point.offset - start));
+        domPoint = [domNode, offset];
+        break;
       }
 
-      start = end
+      start = end;
     }
 
     if (!domPoint) {
       throw new Error(
         `Cannot resolve a DOM point from Slate point: ${JSON.stringify(point)}`
-      )
+      );
     }
 
-    return domPoint
+    return domPoint;
   },
 
   /**
@@ -325,33 +333,33 @@ export const ReactEditor = {
    */
 
   toDOMRange(editor: ReactEditor, range: Range): DOMRange {
-    const { anchor, focus } = range
-    const isBackward = Range.isBackward(range)
-    const domAnchor = ReactEditor.toDOMPoint(editor, anchor)
+    const { anchor, focus } = range;
+    const isBackward = Range.isBackward(range);
+    const domAnchor = ReactEditor.toDOMPoint(editor, anchor);
     const domFocus = Range.isCollapsed(range)
       ? domAnchor
-      : ReactEditor.toDOMPoint(editor, focus)
+      : ReactEditor.toDOMPoint(editor, focus);
 
-    const window = ReactEditor.getWindow(editor)
-    const domRange = window.document.createRange()
-    const [startNode, startOffset] = isBackward ? domFocus : domAnchor
-    const [endNode, endOffset] = isBackward ? domAnchor : domFocus
+    const window = ReactEditor.getWindow(editor);
+    const domRange = window.document.createRange();
+    const [startNode, startOffset] = isBackward ? domFocus : domAnchor;
+    const [endNode, endOffset] = isBackward ? domAnchor : domFocus;
 
     // A slate Point at zero-width Leaf always has an offset of 0 but a native DOM selection at
     // zero-width node has an offset of 1 so we have to check if we are in a zero-width node and
     // adjust the offset accordingly.
     const startEl = (isDOMElement(startNode)
       ? startNode
-      : startNode.parentElement) as HTMLElement
-    const isStartAtZeroWidth = !!startEl.getAttribute('data-slate-zero-width')
+      : startNode.parentElement) as HTMLElement;
+    const isStartAtZeroWidth = !!startEl.getAttribute('data-slate-zero-width');
     const endEl = (isDOMElement(endNode)
       ? endNode
-      : endNode.parentElement) as HTMLElement
-    const isEndAtZeroWidth = !!endEl.getAttribute('data-slate-zero-width')
+      : endNode.parentElement) as HTMLElement;
+    const isEndAtZeroWidth = !!endEl.getAttribute('data-slate-zero-width');
 
-    domRange.setStart(startNode, isStartAtZeroWidth ? 1 : startOffset)
-    domRange.setEnd(endNode, isEndAtZeroWidth ? 1 : endOffset)
-    return domRange
+    domRange.setStart(startNode, isStartAtZeroWidth ? 1 : startOffset);
+    domRange.setEnd(endNode, isEndAtZeroWidth ? 1 : endOffset);
+    return domRange;
   },
 
   /**
@@ -359,19 +367,19 @@ export const ReactEditor = {
    */
 
   toSlateNode(editor: ReactEditor, domNode: DOMNode): Node {
-    let domEl = isDOMElement(domNode) ? domNode : domNode.parentElement
+    let domEl = isDOMElement(domNode) ? domNode : domNode.parentElement;
 
     if (domEl && !domEl.hasAttribute('data-slate-node')) {
-      domEl = domEl.closest(`[data-slate-node]`)
+      domEl = domEl.closest(`[data-slate-node]`);
     }
 
-    const node = domEl ? ELEMENT_TO_NODE.get(domEl as HTMLElement) : null
+    const node = domEl ? ELEMENT_TO_NODE.get(domEl as HTMLElement) : null;
 
     if (!node) {
-      throw new Error(`Cannot resolve a Slate node from DOM node: ${domEl}`)
+      throw new Error(`Cannot resolve a Slate node from DOM node: ${domEl}`);
     }
 
-    return node
+    return node;
   },
 
   /**
@@ -380,66 +388,70 @@ export const ReactEditor = {
 
   findEventRange(editor: ReactEditor, event: any): Range {
     if ('nativeEvent' in event) {
-      event = event.nativeEvent
+      event = event.nativeEvent;
     }
 
-    const { clientX: x, clientY: y, target } = event
+    const { clientX: x, clientY: y, target } = event;
 
     if (x == null || y == null) {
-      throw new Error(`Cannot resolve a Slate range from a DOM event: ${event}`)
+      throw new Error(
+        `Cannot resolve a Slate range from a DOM event: ${event}`
+      );
     }
 
-    const node = ReactEditor.toSlateNode(editor, event.target)
-    const path = ReactEditor.findPath(editor, node)
+    const node = ReactEditor.toSlateNode(editor, event.target);
+    const path = ReactEditor.findPath(editor, node);
 
     // If the drop target is inside a void node, move it into either the
     // next or previous node, depending on which side the `x` and `y`
     // coordinates are closest to.
     if (Editor.isVoid(editor, node)) {
-      const rect = target.getBoundingClientRect()
+      const rect = target.getBoundingClientRect();
       const isPrev = editor.isInline(node)
         ? x - rect.left < rect.left + rect.width - x
-        : y - rect.top < rect.top + rect.height - y
+        : y - rect.top < rect.top + rect.height - y;
 
       const edge = Editor.point(editor, path, {
         edge: isPrev ? 'start' : 'end',
-      })
+      });
       const point = isPrev
         ? Editor.before(editor, edge)
-        : Editor.after(editor, edge)
+        : Editor.after(editor, edge);
 
       if (point) {
-        const range = Editor.range(editor, point)
-        return range
+        const range = Editor.range(editor, point);
+        return range;
       }
     }
 
     // Else resolve a range from the caret position where the drop occured.
-    let domRange
-    const { document } = window
+    let domRange;
+    const { document } = window;
 
     // COMPAT: In Firefox, `caretRangeFromPoint` doesn't exist. (2016/07/25)
     if (document.caretRangeFromPoint) {
-      domRange = document.caretRangeFromPoint(x, y)
+      domRange = document.caretRangeFromPoint(x, y);
     } else {
-      const position = document.caretPositionFromPoint(x, y)
+      const position = document.caretPositionFromPoint(x, y);
 
       if (position) {
-        domRange = document.createRange()
-        domRange.setStart(position.offsetNode, position.offset)
-        domRange.setEnd(position.offsetNode, position.offset)
+        domRange = document.createRange();
+        domRange.setStart(position.offsetNode, position.offset);
+        domRange.setEnd(position.offsetNode, position.offset);
       }
     }
 
     if (!domRange) {
-      throw new Error(`Cannot resolve a Slate range from a DOM event: ${event}`)
+      throw new Error(
+        `Cannot resolve a Slate range from a DOM event: ${event}`
+      );
     }
 
     // Resolve a Slate range from the DOM range.
     const range = ReactEditor.toSlateRange(editor, domRange, {
       exactMatch: false,
-    })
-    return range
+    });
+    return range;
   },
 
   /**
@@ -453,25 +465,25 @@ export const ReactEditor = {
   ): T extends true ? Point | null : Point {
     const [nearestNode, nearestOffset] = extractMatch
       ? domPoint
-      : normalizeDOMPoint(domPoint)
-    const parentNode = nearestNode.parentNode as DOMElement
-    let textNode: DOMElement | null = null
-    let offset = 0
+      : normalizeDOMPoint(domPoint);
+    const parentNode = nearestNode.parentNode as DOMElement;
+    let textNode: DOMElement | null = null;
+    let offset = 0;
 
     if (parentNode) {
-      const voidNode = parentNode.closest('[data-slate-void="true"]')
-      let leafNode = parentNode.closest('[data-slate-leaf]')
-      let domNode: DOMElement | null = null
+      const voidNode = parentNode.closest('[data-slate-void="true"]');
+      let leafNode = parentNode.closest('[data-slate-leaf]');
+      let domNode: DOMElement | null = null;
 
       // Calculate how far into the text node the `nearestNode` is, so that we
       // can determine what the offset relative to the text node is.
       if (leafNode) {
-        textNode = leafNode.closest('[data-slate-node="text"]')!
-        const window = ReactEditor.getWindow(editor)
-        const range = window.document.createRange()
-        range.setStart(textNode, 0)
-        range.setEnd(nearestNode, nearestOffset)
-        const contents = range.cloneContents()
+        textNode = leafNode.closest('[data-slate-node="text"]')!;
+        const window = ReactEditor.getWindow(editor);
+        const range = window.document.createRange();
+        range.setStart(textNode, 0);
+        range.setEnd(nearestNode, nearestOffset);
+        const contents = range.cloneContents();
         const removals = [
           ...Array.prototype.slice.call(
             contents.querySelectorAll('[data-slate-zero-width]')
@@ -479,34 +491,34 @@ export const ReactEditor = {
           ...Array.prototype.slice.call(
             contents.querySelectorAll('[contenteditable=false]')
           ),
-        ]
+        ];
 
-        removals.forEach(el => {
-          el!.parentNode!.removeChild(el)
-        })
+        removals.forEach((el) => {
+          el!.parentNode!.removeChild(el);
+        });
 
         // COMPAT: Edge has a bug where Range.prototype.toString() will
         // convert \n into \r\n. The bug causes a loop when slate-react
         // attempts to reposition its cursor to match the native position. Use
         // textContent.length instead.
         // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10291116/
-        offset = contents.textContent!.length
-        domNode = textNode
+        offset = contents.textContent!.length;
+        domNode = textNode;
       } else if (voidNode) {
         // For void nodes, the element with the offset key will be a cousin, not an
         // ancestor, so find it by going down from the nearest void parent.
-        leafNode = voidNode.querySelector('[data-slate-leaf]')!
+        leafNode = voidNode.querySelector('[data-slate-leaf]')!;
 
         // COMPAT: In read-only editors the leaf is not rendered.
         if (!leafNode) {
-          offset = 1
+          offset = 1;
         } else {
-          textNode = leafNode.closest('[data-slate-node="text"]')!
-          domNode = leafNode
-          offset = domNode.textContent!.length
-          domNode.querySelectorAll('[data-slate-zero-width]').forEach(el => {
-            offset -= el.textContent!.length
-          })
+          textNode = leafNode.closest('[data-slate-node="text"]')!;
+          domNode = leafNode;
+          offset = domNode.textContent!.length;
+          domNode.querySelectorAll('[data-slate-zero-width]').forEach((el) => {
+            offset -= el.textContent!.length;
+          });
         }
       }
 
@@ -520,25 +532,25 @@ export const ReactEditor = {
         offset === domNode.textContent!.length &&
         parentNode.hasAttribute('data-slate-zero-width')
       ) {
-        offset--
+        offset--;
       }
     }
 
     if (!textNode) {
       if (extractMatch) {
-        return null as T extends true ? Point | null : Point
+        return null as T extends true ? Point | null : Point;
       }
       throw new Error(
         `Cannot resolve a Slate point from DOM point: ${domPoint}`
-      )
+      );
     }
 
     // COMPAT: If someone is clicking from one Slate editor into another,
     // the select event fires twice, once for the old editor's `element`
     // first, and then afterwards for the correct `element`. (2017/03/03)
-    const slateNode = ReactEditor.toSlateNode(editor, textNode!)
-    const path = ReactEditor.findPath(editor, slateNode)
-    return { path, offset } as T extends true ? Point | null : Point
+    const slateNode = ReactEditor.toSlateNode(editor, textNode!);
+    const path = ReactEditor.findPath(editor, slateNode);
+    return { path, offset } as T extends true ? Point | null : Point;
   },
 
   /**
@@ -549,25 +561,25 @@ export const ReactEditor = {
     editor: ReactEditor,
     domRange: DOMRange | DOMStaticRange | DOMSelection,
     options: {
-      exactMatch: T
+      exactMatch: T;
     }
   ): T extends true ? Range | null : Range {
-    const { exactMatch } = options
+    const { exactMatch } = options;
     const el = isDOMSelection(domRange)
       ? domRange.anchorNode
-      : domRange.startContainer
-    let anchorNode
-    let anchorOffset
-    let focusNode
-    let focusOffset
-    let isCollapsed
+      : domRange.startContainer;
+    let anchorNode;
+    let anchorOffset;
+    let focusNode;
+    let focusOffset;
+    let isCollapsed;
 
     if (el) {
       if (isDOMSelection(domRange)) {
-        anchorNode = domRange.anchorNode
-        anchorOffset = domRange.anchorOffset
-        focusNode = domRange.focusNode
-        focusOffset = domRange.focusOffset
+        anchorNode = domRange.anchorNode;
+        anchorOffset = domRange.anchorOffset;
+        focusNode = domRange.focusNode;
+        focusOffset = domRange.focusOffset;
         // COMPAT: There's a bug in chrome that always returns `true` for
         // `isCollapsed` for a Selection that comes from a ShadowRoot.
         // (2020/08/08)
@@ -575,16 +587,16 @@ export const ReactEditor = {
         if (IS_CHROME && hasShadowRoot()) {
           isCollapsed =
             domRange.anchorNode === domRange.focusNode &&
-            domRange.anchorOffset === domRange.focusOffset
+            domRange.anchorOffset === domRange.focusOffset;
         } else {
-          isCollapsed = domRange.isCollapsed
+          isCollapsed = domRange.isCollapsed;
         }
       } else {
-        anchorNode = domRange.startContainer
-        anchorOffset = domRange.startOffset
-        focusNode = domRange.endContainer
-        focusOffset = domRange.endOffset
-        isCollapsed = domRange.collapsed
+        anchorNode = domRange.startContainer;
+        anchorOffset = domRange.startOffset;
+        focusNode = domRange.endContainer;
+        focusOffset = domRange.endOffset;
+        isCollapsed = domRange.collapsed;
       }
     }
 
@@ -596,34 +608,34 @@ export const ReactEditor = {
     ) {
       throw new Error(
         `Cannot resolve a Slate range from DOM range: ${domRange}`
-      )
+      );
     }
 
     const anchor = ReactEditor.toSlatePoint(
       editor,
       [anchorNode, anchorOffset],
       exactMatch
-    )
+    );
     if (!anchor) {
-      return null as T extends true ? Range | null : Range
+      return null as T extends true ? Range | null : Range;
     }
 
     const focus = isCollapsed
       ? anchor
-      : ReactEditor.toSlatePoint(editor, [focusNode, focusOffset], exactMatch)
+      : ReactEditor.toSlatePoint(editor, [focusNode, focusOffset], exactMatch);
     if (!focus) {
-      return null as T extends true ? Range | null : Range
+      return null as T extends true ? Range | null : Range;
     }
 
     return ({ anchor, focus } as unknown) as T extends true
       ? Range | null
-      : Range
+      : Range;
   },
 
   hasRange(editor: ReactEditor, range: Range): boolean {
-    const { anchor, focus } = range
+    const { anchor, focus } = range;
     return (
       Editor.hasPath(editor, anchor.path) && Editor.hasPath(editor, focus.path)
-    )
+    );
   },
-}
+};

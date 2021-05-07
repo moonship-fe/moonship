@@ -1,5 +1,5 @@
-import { isKeyHotkey } from 'is-hotkey'
-import { IS_APPLE } from './environment'
+import { isKeyHotkey } from 'is-hotkey';
+import { IS_APPLE } from './environment';
 
 /**
  * Hotkey mappings for each platform.
@@ -19,7 +19,7 @@ const HOTKEYS = {
   italic: 'mod+i',
   splitBlock: 'shift?+enter',
   undo: 'mod+z',
-}
+};
 
 const APPLE_HOTKEYS = {
   moveLineBackward: 'opt+up',
@@ -36,33 +36,33 @@ const APPLE_HOTKEYS = {
   extendLineForward: 'opt+shift+down',
   redo: 'cmd+shift+z',
   transposeCharacter: 'ctrl+t',
-}
+};
 
 const WINDOWS_HOTKEYS = {
   deleteWordBackward: 'ctrl+shift?+backspace',
   deleteWordForward: 'ctrl+shift?+delete',
   redo: ['ctrl+y', 'ctrl+shift+z'],
-}
+};
 
 /**
  * Create a platform-aware hotkey checker.
  */
 
 const create = (key: string) => {
-  const generic = HOTKEYS[key]
-  const apple = APPLE_HOTKEYS[key]
-  const windows = WINDOWS_HOTKEYS[key]
-  const isGeneric = generic && isKeyHotkey(generic)
-  const isApple = apple && isKeyHotkey(apple)
-  const isWindows = windows && isKeyHotkey(windows)
+  const generic = HOTKEYS[key];
+  const apple = APPLE_HOTKEYS[key];
+  const windows = WINDOWS_HOTKEYS[key];
+  const isGeneric = generic && isKeyHotkey(generic);
+  const isApple = apple && isKeyHotkey(apple);
+  const isWindows = windows && isKeyHotkey(windows);
 
   return (event: KeyboardEvent) => {
-    if (isGeneric && isGeneric(event)) return true
-    if (IS_APPLE && isApple && isApple(event)) return true
-    if (!IS_APPLE && isWindows && isWindows(event)) return true
-    return false
-  }
-}
+    if (isGeneric && isGeneric(event)) return true;
+    if (IS_APPLE && isApple && isApple(event)) return true;
+    if (!IS_APPLE && isWindows && isWindows(event)) return true;
+    return false;
+  };
+};
 
 /**
  * Hotkeys.
@@ -92,4 +92,4 @@ export default {
   isSplitBlock: create('splitBlock'),
   isTransposeCharacter: create('transposeCharacter'),
   isUndo: create('undo'),
-}
+};

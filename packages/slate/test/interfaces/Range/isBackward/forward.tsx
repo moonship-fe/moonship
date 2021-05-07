@@ -1,4 +1,4 @@
-import { Range } from '@moonship-fe/slate'
+import { Range } from '@moonship-fe/slate';
 
 export const input = {
   anchor: {
@@ -9,8 +9,8 @@ export const input = {
     path: [3],
     offset: 0,
   },
-}
-export const test = range => {
-  return Range.isBackward(range)
-}
-export const output = false
+};
+export const test = (range) => {
+  return Range.isBackward(range);
+};
+export const output = false;

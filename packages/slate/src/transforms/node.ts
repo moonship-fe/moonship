@@ -10,116 +10,116 @@ import {
   Transforms,
   NodeEntry,
   Ancestor,
-} from '..'
-import { NodeMatch } from '../interfaces/editor'
+} from '..';
+import { NodeMatch } from '../interfaces/editor';
 
 export interface NodeTransforms {
   insertNodes: <T extends Node>(
     editor: Editor,
     nodes: Node | Node[],
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      select?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      select?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   liftNodes: <T extends Node>(
     editor: Editor,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   mergeNodes: <T extends Node>(
     editor: Editor,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   moveNodes: <T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      to: Path
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      to: Path;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   removeNodes: <T extends Node>(
     editor: Editor,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   setNodes: <T extends Node>(
     editor: Editor,
     props: Partial<Node>,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      hanging?: boolean
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      hanging?: boolean;
+      split?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   splitNodes: <T extends Node>(
     editor: Editor,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      always?: boolean
-      height?: number
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      always?: boolean;
+      height?: number;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   unsetNodes: <T extends Node>(
     editor: Editor,
     props: string | string[],
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   unwrapNodes: <T extends Node>(
     editor: Editor,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
   wrapNodes: <T extends Node>(
     editor: Editor,
     element: Element,
     options?: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     }
-  ) => void
+  ) => void;
 }
 
 export const NodeTransforms: NodeTransforms = {
@@ -131,70 +131,70 @@ export const NodeTransforms: NodeTransforms = {
     editor: Editor,
     nodes: Node | Node[],
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      select?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      select?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { hanging = false, voids = false, mode = 'lowest' } = options
-      let { at, match, select } = options
+      const { hanging = false, voids = false, mode = 'lowest' } = options;
+      let { at, match, select } = options;
 
       if (Node.isNode(nodes)) {
-        nodes = [nodes]
+        nodes = [nodes];
       }
 
       if (nodes.length === 0) {
-        return
+        return;
       }
 
-      const [node] = nodes
+      const [node] = nodes;
 
       // By default, use the selection as the target location. But if there is
       // no selection, insert at the end of the document since that is such a
       // common use case when inserting from a non-selected state.
       if (!at) {
         if (editor.selection) {
-          at = editor.selection
+          at = editor.selection;
         } else if (editor.children.length > 0) {
-          at = Editor.end(editor, [])
+          at = Editor.end(editor, []);
         } else {
-          at = [0]
+          at = [0];
         }
 
-        select = true
+        select = true;
       }
 
       if (select == null) {
-        select = false
+        select = false;
       }
 
       if (Range.isRange(at)) {
         if (!hanging) {
-          at = Editor.unhangRange(editor, at)
+          at = Editor.unhangRange(editor, at);
         }
 
         if (Range.isCollapsed(at)) {
-          at = at.anchor
+          at = at.anchor;
         } else {
-          const [, end] = Range.edges(at)
-          const pointRef = Editor.pointRef(editor, end)
-          Transforms.delete(editor, { at })
-          at = pointRef.unref()!
+          const [, end] = Range.edges(at);
+          const pointRef = Editor.pointRef(editor, end);
+          Transforms.delete(editor, { at });
+          at = pointRef.unref()!;
         }
       }
 
       if (Point.isPoint(at)) {
         if (match == null) {
           if (Text.isText(node)) {
-            match = n => Text.isText(n)
+            match = (n) => Text.isText(n);
           } else if (editor.isInline(node)) {
-            match = n => Text.isText(n) || Editor.isInline(editor, n)
+            match = (n) => Text.isText(n) || Editor.isInline(editor, n);
           } else {
-            match = n => Editor.isBlock(editor, n)
+            match = (n) => Editor.isBlock(editor, n);
           }
         }
 
@@ -203,41 +203,41 @@ export const NodeTransforms: NodeTransforms = {
           match,
           mode,
           voids,
-        })
+        });
 
         if (entry) {
-          const [, matchPath] = entry
-          const pathRef = Editor.pathRef(editor, matchPath)
-          const isAtEnd = Editor.isEnd(editor, at, matchPath)
-          Transforms.splitNodes(editor, { at, match, mode, voids })
-          const path = pathRef.unref()!
-          at = isAtEnd ? Path.next(path) : path
+          const [, matchPath] = entry;
+          const pathRef = Editor.pathRef(editor, matchPath);
+          const isAtEnd = Editor.isEnd(editor, at, matchPath);
+          Transforms.splitNodes(editor, { at, match, mode, voids });
+          const path = pathRef.unref()!;
+          at = isAtEnd ? Path.next(path) : path;
         } else {
-          return
+          return;
         }
       }
 
-      const parentPath = Path.parent(at)
-      let index = at[at.length - 1]
+      const parentPath = Path.parent(at);
+      let index = at[at.length - 1];
 
       if (!voids && Editor.void(editor, { at: parentPath })) {
-        return
+        return;
       }
 
       for (const node of nodes) {
-        const path = parentPath.concat(index)
-        index++
-        editor.apply({ type: 'insert_node', path, node })
+        const path = parentPath.concat(index);
+        index++;
+        editor.apply({ type: 'insert_node', path, node });
       }
 
       if (select) {
-        const point = Editor.end(editor, at)
+        const point = Editor.end(editor, at);
 
         if (point) {
-          Transforms.select(editor, point)
+          Transforms.select(editor, point);
         }
       }
-    })
+    });
   },
 
   /**
@@ -248,60 +248,62 @@ export const NodeTransforms: NodeTransforms = {
   liftNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { at = editor.selection, mode = 'lowest', voids = false } = options
-      let { match } = options
+      const { at = editor.selection, mode = 'lowest', voids = false } = options;
+      let { match } = options;
 
       if (match == null) {
         match = Path.isPath(at)
           ? matchPath(editor, at)
-          : n => Editor.isBlock(editor, n)
+          : (n) => Editor.isBlock(editor, n);
       }
 
       if (!at) {
-        return
+        return;
       }
 
-      const matches = Editor.nodes(editor, { at, match, mode, voids })
-      const pathRefs = Array.from(matches, ([, p]) => Editor.pathRef(editor, p))
+      const matches = Editor.nodes(editor, { at, match, mode, voids });
+      const pathRefs = Array.from(matches, ([, p]) =>
+        Editor.pathRef(editor, p)
+      );
 
       for (const pathRef of pathRefs) {
-        const path = pathRef.unref()!
+        const path = pathRef.unref()!;
 
         if (path.length < 2) {
           throw new Error(
             `Cannot lift node at a path [${path}] because it has a depth of less than \`2\`.`
-          )
+          );
         }
 
-        const parentNodeEntry = Editor.node(editor, Path.parent(path))
-        const [parent, parentPath] = parentNodeEntry as NodeEntry<Ancestor>
-        const index = path[path.length - 1]
-        const { length } = parent.children
+        const parentNodeEntry = Editor.node(editor, Path.parent(path));
+        const [parent, parentPath] = parentNodeEntry as NodeEntry<Ancestor>;
+        const index = path[path.length - 1];
+        const { length } = parent.children;
 
         if (length === 1) {
-          const toPath = Path.next(parentPath)
-          Transforms.moveNodes(editor, { at: path, to: toPath, voids })
-          Transforms.removeNodes(editor, { at: parentPath, voids })
+          const toPath = Path.next(parentPath);
+          Transforms.moveNodes(editor, { at: path, to: toPath, voids });
+          Transforms.removeNodes(editor, { at: parentPath, voids });
         } else if (index === 0) {
-          Transforms.moveNodes(editor, { at: path, to: parentPath, voids })
+          Transforms.moveNodes(editor, { at: path, to: parentPath, voids });
         } else if (index === length - 1) {
-          const toPath = Path.next(parentPath)
-          Transforms.moveNodes(editor, { at: path, to: toPath, voids })
+          const toPath = Path.next(parentPath);
+          Transforms.moveNodes(editor, { at: path, to: toPath, voids });
         } else {
-          const splitPath = Path.next(path)
-          const toPath = Path.next(parentPath)
-          Transforms.splitNodes(editor, { at: splitPath, voids })
-          Transforms.moveNodes(editor, { at: path, to: toPath, voids })
+          const splitPath = Path.next(path);
+          const toPath = Path.next(parentPath);
+          Transforms.splitNodes(editor, { at: splitPath, voids });
+          Transforms.moveNodes(editor, { at: path, to: toPath, voids });
         }
       }
-    })
+    });
   },
 
   /**
@@ -312,110 +314,111 @@ export const NodeTransforms: NodeTransforms = {
   mergeNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      let { match, at = editor.selection } = options
-      const { hanging = false, voids = false, mode = 'lowest' } = options
+      let { match, at = editor.selection } = options;
+      const { hanging = false, voids = false, mode = 'lowest' } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         if (Path.isPath(at)) {
-          const [parent] = Editor.parent(editor, at)
-          match = n => parent.children.includes(n)
+          const [parent] = Editor.parent(editor, at);
+          match = (n) => parent.children.includes(n);
         } else {
-          match = n => Editor.isBlock(editor, n)
+          match = (n) => Editor.isBlock(editor, n);
         }
       }
 
       if (!hanging && Range.isRange(at)) {
-        at = Editor.unhangRange(editor, at)
+        at = Editor.unhangRange(editor, at);
       }
 
       if (Range.isRange(at)) {
         if (Range.isCollapsed(at)) {
-          at = at.anchor
+          at = at.anchor;
         } else {
-          const [, end] = Range.edges(at)
-          const pointRef = Editor.pointRef(editor, end)
-          Transforms.delete(editor, { at })
-          at = pointRef.unref()!
+          const [, end] = Range.edges(at);
+          const pointRef = Editor.pointRef(editor, end);
+          Transforms.delete(editor, { at });
+          at = pointRef.unref()!;
 
           if (options.at == null) {
-            Transforms.select(editor, at)
+            Transforms.select(editor, at);
           }
         }
       }
 
-      const [current] = Editor.nodes(editor, { at, match, voids, mode })
-      const prev = Editor.previous(editor, { at, match, voids, mode })
+      const [current] = Editor.nodes(editor, { at, match, voids, mode });
+      const prev = Editor.previous(editor, { at, match, voids, mode });
 
       if (!current || !prev) {
-        return
+        return;
       }
 
-      const [node, path] = current
-      const [prevNode, prevPath] = prev
+      const [node, path] = current;
+      const [prevNode, prevPath] = prev;
 
       if (path.length === 0 || prevPath.length === 0) {
-        return
+        return;
       }
 
-      const newPath = Path.next(prevPath)
-      const commonPath = Path.common(path, prevPath)
-      const isPreviousSibling = Path.isSibling(path, prevPath)
+      const newPath = Path.next(prevPath);
+      const commonPath = Path.common(path, prevPath);
+      const isPreviousSibling = Path.isSibling(path, prevPath);
       const levels = Array.from(Editor.levels(editor, { at: path }), ([n]) => n)
         .slice(commonPath.length)
-        .slice(0, -1)
+        .slice(0, -1);
 
       // Determine if the merge will leave an ancestor of the path empty as a
       // result, in which case we'll want to remove it after merging.
       const emptyAncestor = Editor.above(editor, {
         at: path,
         mode: 'highest',
-        match: n => levels.includes(n) && hasSingleChildNest(editor, n),
-      })
+        match: (n) => levels.includes(n) && hasSingleChildNest(editor, n),
+      });
 
-      const emptyRef = emptyAncestor && Editor.pathRef(editor, emptyAncestor[1])
-      let properties
-      let position
+      const emptyRef =
+        emptyAncestor && Editor.pathRef(editor, emptyAncestor[1]);
+      let properties;
+      let position;
 
       // Ensure that the nodes are equivalent, and figure out what the position
       // and extra properties of the merge will be.
       if (Text.isText(node) && Text.isText(prevNode)) {
-        const { text, ...rest } = node
-        position = prevNode.text.length
-        properties = rest as Partial<Text>
+        const { text, ...rest } = node;
+        position = prevNode.text.length;
+        properties = rest as Partial<Text>;
       } else if (Element.isElement(node) && Element.isElement(prevNode)) {
-        const { children, ...rest } = node
-        position = prevNode.children.length
-        properties = rest as Partial<Element>
+        const { children, ...rest } = node;
+        position = prevNode.children.length;
+        properties = rest as Partial<Element>;
       } else {
         throw new Error(
           `Cannot merge the node at path [${path}] with the previous sibling because it is not the same kind: ${JSON.stringify(
             node
           )} ${JSON.stringify(prevNode)}`
-        )
+        );
       }
 
       // If the node isn't already the next sibling of the previous node, move
       // it so that it is before merging.
       if (!isPreviousSibling) {
-        Transforms.moveNodes(editor, { at: path, to: newPath, voids })
+        Transforms.moveNodes(editor, { at: path, to: newPath, voids });
       }
 
       // If there was going to be an empty ancestor of the node that was merged,
       // we remove it from the tree.
       if (emptyRef) {
-        Transforms.removeNodes(editor, { at: emptyRef.current!, voids })
+        Transforms.removeNodes(editor, { at: emptyRef.current!, voids });
       }
 
       // If the target node that we're merging with is empty, remove it instead
@@ -426,20 +429,20 @@ export const NodeTransforms: NodeTransforms = {
         (Element.isElement(prevNode) && Editor.isEmpty(editor, prevNode)) ||
         (Text.isText(prevNode) && prevNode.text === '')
       ) {
-        Transforms.removeNodes(editor, { at: prevPath, voids })
+        Transforms.removeNodes(editor, { at: prevPath, voids });
       } else {
         editor.apply({
           type: 'merge_node',
           path: newPath,
           position,
           properties,
-        })
+        });
       }
 
       if (emptyRef) {
-        emptyRef.unref()
+        emptyRef.unref();
       }
-    })
+    });
   },
 
   /**
@@ -449,11 +452,11 @@ export const NodeTransforms: NodeTransforms = {
   moveNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      to: Path
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      to: Path;
+      voids?: boolean;
     }
   ): void {
     Editor.withoutNormalizing(editor, () => {
@@ -462,29 +465,31 @@ export const NodeTransforms: NodeTransforms = {
         at = editor.selection,
         mode = 'lowest',
         voids = false,
-      } = options
-      let { match } = options
+      } = options;
+      let { match } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         match = Path.isPath(at)
           ? matchPath(editor, at)
-          : n => Editor.isBlock(editor, n)
+          : (n) => Editor.isBlock(editor, n);
       }
 
-      const toRef = Editor.pathRef(editor, to)
-      const targets = Editor.nodes(editor, { at, match, mode, voids })
-      const pathRefs = Array.from(targets, ([, p]) => Editor.pathRef(editor, p))
+      const toRef = Editor.pathRef(editor, to);
+      const targets = Editor.nodes(editor, { at, match, mode, voids });
+      const pathRefs = Array.from(targets, ([, p]) =>
+        Editor.pathRef(editor, p)
+      );
 
       for (const pathRef of pathRefs) {
-        const path = pathRef.unref()!
-        const newPath = toRef.current!
+        const path = pathRef.unref()!;
+        const newPath = toRef.current!;
 
         if (path.length !== 0) {
-          editor.apply({ type: 'move_node', path, newPath })
+          editor.apply({ type: 'move_node', path, newPath });
         }
 
         if (
@@ -495,12 +500,12 @@ export const NodeTransforms: NodeTransforms = {
           // When performing a sibling move to a later index, the path at the destination is shifted
           // to before the insertion point instead of after. To ensure our group of nodes are inserted
           // in the correct order we increment toRef to account for that
-          toRef.current = Path.next(toRef.current)
+          toRef.current = Path.next(toRef.current);
         }
       }
 
-      toRef.unref()
-    })
+      toRef.unref();
+    });
   },
 
   /**
@@ -510,43 +515,43 @@ export const NodeTransforms: NodeTransforms = {
   removeNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      hanging?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      hanging?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { hanging = false, voids = false, mode = 'lowest' } = options
-      let { at = editor.selection, match } = options
+      const { hanging = false, voids = false, mode = 'lowest' } = options;
+      let { at = editor.selection, match } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         match = Path.isPath(at)
           ? matchPath(editor, at)
-          : n => Editor.isBlock(editor, n)
+          : (n) => Editor.isBlock(editor, n);
       }
 
       if (!hanging && Range.isRange(at)) {
-        at = Editor.unhangRange(editor, at)
+        at = Editor.unhangRange(editor, at);
       }
 
-      const depths = Editor.nodes(editor, { at, match, mode, voids })
-      const pathRefs = Array.from(depths, ([, p]) => Editor.pathRef(editor, p))
+      const depths = Editor.nodes(editor, { at, match, mode, voids });
+      const pathRefs = Array.from(depths, ([, p]) => Editor.pathRef(editor, p));
 
       for (const pathRef of pathRefs) {
-        const path = pathRef.unref()!
+        const path = pathRef.unref()!;
 
         if (path) {
-          const [node] = Editor.node(editor, path)
-          editor.apply({ type: 'remove_node', path, node })
+          const [node] = Editor.node(editor, path);
+          editor.apply({ type: 'remove_node', path, node });
         }
       }
-    })
+    });
   },
 
   /**
@@ -557,61 +562,61 @@ export const NodeTransforms: NodeTransforms = {
     editor: Editor,
     props: Partial<Node>,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      hanging?: boolean
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      hanging?: boolean;
+      split?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      let { match, at = editor.selection } = options
+      let { match, at = editor.selection } = options;
       const {
         hanging = false,
         mode = 'lowest',
         split = false,
         voids = false,
-      } = options
+      } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         match = Path.isPath(at)
           ? matchPath(editor, at)
-          : n => Editor.isBlock(editor, n)
+          : (n) => Editor.isBlock(editor, n);
       }
 
       if (!hanging && Range.isRange(at)) {
-        at = Editor.unhangRange(editor, at)
+        at = Editor.unhangRange(editor, at);
       }
 
       if (split && Range.isRange(at)) {
-        const rangeRef = Editor.rangeRef(editor, at, { affinity: 'inward' })
-        const [start, end] = Range.edges(at)
-        const splitMode = mode === 'lowest' ? 'lowest' : 'highest'
-        const endAtEndOfNode = Editor.isEnd(editor, end, end.path)
+        const rangeRef = Editor.rangeRef(editor, at, { affinity: 'inward' });
+        const [start, end] = Range.edges(at);
+        const splitMode = mode === 'lowest' ? 'lowest' : 'highest';
+        const endAtEndOfNode = Editor.isEnd(editor, end, end.path);
         Transforms.splitNodes(editor, {
           at: end,
           match,
           mode: splitMode,
           voids,
           always: !endAtEndOfNode,
-        })
-        const startAtStartOfNode = Editor.isStart(editor, start, start.path)
+        });
+        const startAtStartOfNode = Editor.isStart(editor, start, start.path);
         Transforms.splitNodes(editor, {
           at: start,
           match,
           mode: splitMode,
           voids,
           always: !startAtStartOfNode,
-        })
-        at = rangeRef.unref()!
+        });
+        at = rangeRef.unref()!;
 
         if (options.at == null) {
-          Transforms.select(editor, at)
+          Transforms.select(editor, at);
         }
       }
 
@@ -621,23 +626,23 @@ export const NodeTransforms: NodeTransforms = {
         mode,
         voids,
       })) {
-        const properties: Partial<Node> = {}
-        const newProperties: Partial<Node> = {}
+        const properties: Partial<Node> = {};
+        const newProperties: Partial<Node> = {};
 
         // You can't set properties on the editor node.
         if (path.length === 0) {
-          continue
+          continue;
         }
 
         for (const k in props) {
           if (k === 'children' || k === 'text') {
-            continue
+            continue;
           }
 
           if (props[k] !== node[k]) {
             // Omit new properties from the old property list rather than set them to undefined
-            if (node.hasOwnProperty(k)) properties[k] = node[k]
-            newProperties[k] = props[k]
+            if (node.hasOwnProperty(k)) properties[k] = node[k];
+            newProperties[k] = props[k];
           }
         }
 
@@ -647,10 +652,10 @@ export const NodeTransforms: NodeTransforms = {
             path,
             properties,
             newProperties,
-          })
+          });
         }
       }
-    })
+    });
   },
 
   /**
@@ -660,122 +665,127 @@ export const NodeTransforms: NodeTransforms = {
   splitNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'highest' | 'lowest'
-      always?: boolean
-      height?: number
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'highest' | 'lowest';
+      always?: boolean;
+      height?: number;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { mode = 'lowest', voids = false } = options
-      let { match, at = editor.selection, height = 0, always = false } = options
+      const { mode = 'lowest', voids = false } = options;
+      let {
+        match,
+        at = editor.selection,
+        height = 0,
+        always = false,
+      } = options;
 
       if (match == null) {
-        match = n => Editor.isBlock(editor, n)
+        match = (n) => Editor.isBlock(editor, n);
       }
 
       if (Range.isRange(at)) {
-        at = deleteRange(editor, at)
+        at = deleteRange(editor, at);
       }
 
       // If the target is a path, the default height-skipping and position
       // counters need to account for us potentially splitting at a non-leaf.
       if (Path.isPath(at)) {
-        const path = at
-        const point = Editor.point(editor, path)
-        const [parent] = Editor.parent(editor, path)
-        match = n => n === parent
-        height = point.path.length - path.length + 1
-        at = point
-        always = true
+        const path = at;
+        const point = Editor.point(editor, path);
+        const [parent] = Editor.parent(editor, path);
+        match = (n) => n === parent;
+        height = point.path.length - path.length + 1;
+        at = point;
+        always = true;
       }
 
       if (!at) {
-        return
+        return;
       }
 
       const beforeRef = Editor.pointRef(editor, at, {
         affinity: 'backward',
-      })
-      const [highest] = Editor.nodes(editor, { at, match, mode, voids })
+      });
+      const [highest] = Editor.nodes(editor, { at, match, mode, voids });
 
       if (!highest) {
-        return
+        return;
       }
 
-      const voidMatch = Editor.void(editor, { at, mode: 'highest' })
-      const nudge = 0
+      const voidMatch = Editor.void(editor, { at, mode: 'highest' });
+      const nudge = 0;
 
       if (!voids && voidMatch) {
-        const [voidNode, voidPath] = voidMatch
+        const [voidNode, voidPath] = voidMatch;
 
         if (Element.isElement(voidNode) && editor.isInline(voidNode)) {
-          let after = Editor.after(editor, voidPath)
+          let after = Editor.after(editor, voidPath);
 
           if (!after) {
-            const text = { text: '' }
-            const afterPath = Path.next(voidPath)
-            Transforms.insertNodes(editor, text, { at: afterPath, voids })
-            after = Editor.point(editor, afterPath)!
+            const text = { text: '' };
+            const afterPath = Path.next(voidPath);
+            Transforms.insertNodes(editor, text, { at: afterPath, voids });
+            after = Editor.point(editor, afterPath)!;
           }
 
-          at = after
-          always = true
+          at = after;
+          always = true;
         }
 
-        const siblingHeight = at.path.length - voidPath.length
-        height = siblingHeight + 1
-        always = true
+        const siblingHeight = at.path.length - voidPath.length;
+        height = siblingHeight + 1;
+        always = true;
       }
 
-      const afterRef = Editor.pointRef(editor, at)
-      const depth = at.path.length - height
-      const [, highestPath] = highest
-      const lowestPath = at.path.slice(0, depth)
-      let position = height === 0 ? at.offset : at.path[depth] + nudge
+      const afterRef = Editor.pointRef(editor, at);
+      const depth = at.path.length - height;
+      const [, highestPath] = highest;
+      const lowestPath = at.path.slice(0, depth);
+      let position = height === 0 ? at.offset : at.path[depth] + nudge;
 
       for (const [node, path] of Editor.levels(editor, {
         at: lowestPath,
         reverse: true,
         voids,
       })) {
-        let split = false
+        let split = false;
 
         if (
           path.length < highestPath.length ||
           path.length === 0 ||
           (!voids && Editor.isVoid(editor, node))
         ) {
-          break
+          break;
         }
 
-        const point = beforeRef.current!
-        const isEnd = Editor.isEnd(editor, point, path)
+        const point = beforeRef.current!;
+        const isEnd = Editor.isEnd(editor, point, path);
 
         if (always || !beforeRef || !Editor.isEdge(editor, point, path)) {
-          split = true
-          const properties = Node.extractProps(node)
+          split = true;
+          const properties = Node.extractProps(node);
           editor.apply({
             type: 'split_node',
             path,
             position,
             properties,
-          })
+          });
         }
 
-        position = path[path.length - 1] + (split || isEnd ? 1 : 0)
+        position = path[path.length - 1] + (split || isEnd ? 1 : 0);
       }
 
       if (options.at == null) {
-        const point = afterRef.current || Editor.end(editor, [])
-        Transforms.select(editor, point)
+        const point = afterRef.current || Editor.end(editor, []);
+        Transforms.select(editor, point);
       }
 
-      beforeRef.unref()
-      afterRef.unref()
-    })
+      beforeRef.unref();
+      afterRef.unref();
+    });
   },
 
   /**
@@ -786,24 +796,24 @@ export const NodeTransforms: NodeTransforms = {
     editor: Editor,
     props: string | string[],
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     if (!Array.isArray(props)) {
-      props = [props]
+      props = [props];
     }
 
-    const obj = {}
+    const obj = {};
 
     for (const key of props) {
-      obj[key] = null
+      obj[key] = null;
     }
 
-    Transforms.setNodes(editor, obj, options)
+    Transforms.setNodes(editor, obj, options);
   },
 
   /**
@@ -814,55 +824,57 @@ export const NodeTransforms: NodeTransforms = {
   unwrapNodes<T extends Node>(
     editor: Editor,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { mode = 'lowest', split = false, voids = false } = options
-      let { at = editor.selection, match } = options
+      const { mode = 'lowest', split = false, voids = false } = options;
+      let { at = editor.selection, match } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         match = Path.isPath(at)
           ? matchPath(editor, at)
-          : n => Editor.isBlock(editor, n)
+          : (n) => Editor.isBlock(editor, n);
       }
 
       if (Path.isPath(at)) {
-        at = Editor.range(editor, at)
+        at = Editor.range(editor, at);
       }
 
-      const rangeRef = Range.isRange(at) ? Editor.rangeRef(editor, at) : null
-      const matches = Editor.nodes(editor, { at, match, mode, voids })
-      const pathRefs = Array.from(matches, ([, p]) => Editor.pathRef(editor, p))
+      const rangeRef = Range.isRange(at) ? Editor.rangeRef(editor, at) : null;
+      const matches = Editor.nodes(editor, { at, match, mode, voids });
+      const pathRefs = Array.from(matches, ([, p]) =>
+        Editor.pathRef(editor, p)
+      );
 
       for (const pathRef of pathRefs) {
-        const path = pathRef.unref()!
-        const [node] = Editor.node(editor, path)
-        let range = Editor.range(editor, path)
+        const path = pathRef.unref()!;
+        const [node] = Editor.node(editor, path);
+        let range = Editor.range(editor, path);
 
         if (split && rangeRef) {
-          range = Range.intersection(rangeRef.current!, range)!
+          range = Range.intersection(rangeRef.current!, range)!;
         }
 
         Transforms.liftNodes(editor, {
           at: range,
-          match: n => Element.isAncestor(node) && node.children.includes(n),
+          match: (n) => Element.isAncestor(node) && node.children.includes(n),
           voids,
-        })
+        });
       }
 
       if (rangeRef) {
-        rangeRef.unref()
+        rangeRef.unref();
       }
-    })
+    });
   },
 
   /**
@@ -874,42 +886,42 @@ export const NodeTransforms: NodeTransforms = {
     editor: Editor,
     element: Element,
     options: {
-      at?: Location
-      match?: NodeMatch<T>
-      mode?: 'all' | 'highest' | 'lowest'
-      split?: boolean
-      voids?: boolean
+      at?: Location;
+      match?: NodeMatch<T>;
+      mode?: 'all' | 'highest' | 'lowest';
+      split?: boolean;
+      voids?: boolean;
     } = {}
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { mode = 'lowest', split = false, voids = false } = options
-      let { match, at = editor.selection } = options
+      const { mode = 'lowest', split = false, voids = false } = options;
+      let { match, at = editor.selection } = options;
 
       if (!at) {
-        return
+        return;
       }
 
       if (match == null) {
         if (Path.isPath(at)) {
-          match = matchPath(editor, at)
+          match = matchPath(editor, at);
         } else if (editor.isInline(element)) {
-          match = n => Editor.isInline(editor, n) || Text.isText(n)
+          match = (n) => Editor.isInline(editor, n) || Text.isText(n);
         } else {
-          match = n => Editor.isBlock(editor, n)
+          match = (n) => Editor.isBlock(editor, n);
         }
       }
 
       if (split && Range.isRange(at)) {
-        const [start, end] = Range.edges(at)
+        const [start, end] = Range.edges(at);
         const rangeRef = Editor.rangeRef(editor, at, {
           affinity: 'inward',
-        })
-        Transforms.splitNodes(editor, { at: end, match, voids })
-        Transforms.splitNodes(editor, { at: start, match, voids })
-        at = rangeRef.unref()!
+        });
+        Transforms.splitNodes(editor, { at: end, match, voids });
+        Transforms.splitNodes(editor, { at: start, match, voids });
+        at = rangeRef.unref()!;
 
         if (options.at == null) {
-          Transforms.select(editor, at)
+          Transforms.select(editor, at);
         }
       }
 
@@ -917,72 +929,72 @@ export const NodeTransforms: NodeTransforms = {
         Editor.nodes(editor, {
           at,
           match: editor.isInline(element)
-            ? n => Editor.isBlock(editor, n)
-            : n => Editor.isEditor(n),
+            ? (n) => Editor.isBlock(editor, n)
+            : (n) => Editor.isEditor(n),
           mode: 'lowest',
           voids,
         })
-      )
+      );
 
       for (const [, rootPath] of roots) {
         const a = Range.isRange(at)
           ? Range.intersection(at, Editor.range(editor, rootPath))
-          : at
+          : at;
 
         if (!a) {
-          continue
+          continue;
         }
 
         const matches = Array.from(
           Editor.nodes(editor, { at: a, match, mode, voids })
-        )
+        );
 
         if (matches.length > 0) {
-          const [first] = matches
-          const last = matches[matches.length - 1]
-          const [, firstPath] = first
-          const [, lastPath] = last
+          const [first] = matches;
+          const last = matches[matches.length - 1];
+          const [, firstPath] = first;
+          const [, lastPath] = last;
           const commonPath = Path.equals(firstPath, lastPath)
             ? Path.parent(firstPath)
-            : Path.common(firstPath, lastPath)
+            : Path.common(firstPath, lastPath);
 
-          const range = Editor.range(editor, firstPath, lastPath)
-          const commonNodeEntry = Editor.node(editor, commonPath)
-          const [commonNode] = commonNodeEntry
-          const depth = commonPath.length + 1
-          const wrapperPath = Path.next(lastPath.slice(0, depth))
-          const wrapper = { ...element, children: [] }
-          Transforms.insertNodes(editor, wrapper, { at: wrapperPath, voids })
+          const range = Editor.range(editor, firstPath, lastPath);
+          const commonNodeEntry = Editor.node(editor, commonPath);
+          const [commonNode] = commonNodeEntry;
+          const depth = commonPath.length + 1;
+          const wrapperPath = Path.next(lastPath.slice(0, depth));
+          const wrapper = { ...element, children: [] };
+          Transforms.insertNodes(editor, wrapper, { at: wrapperPath, voids });
 
           Transforms.moveNodes(editor, {
             at: range,
-            match: n =>
+            match: (n) =>
               Element.isAncestor(commonNode) && commonNode.children.includes(n),
             to: wrapperPath.concat(0),
             voids,
-          })
+          });
         }
       }
-    })
+    });
   },
-}
+};
 
 const hasSingleChildNest = (editor: Editor, node: Node): boolean => {
   if (Element.isElement(node)) {
-    const element = node as Element
+    const element = node as Element;
     if (Editor.isVoid(editor, node)) {
-      return true
+      return true;
     } else if (element.children.length === 1) {
-      return hasSingleChildNest(editor, element.children[0])
+      return hasSingleChildNest(editor, element.children[0]);
     } else {
-      return false
+      return false;
     }
   } else if (Editor.isEditor(node)) {
-    return false
+    return false;
   } else {
-    return true
+    return true;
   }
-}
+};
 
 /**
  * Convert a range into a point by deleting it's content.
@@ -990,16 +1002,16 @@ const hasSingleChildNest = (editor: Editor, node: Node): boolean => {
 
 const deleteRange = (editor: Editor, range: Range): Point | null => {
   if (Range.isCollapsed(range)) {
-    return range.anchor
+    return range.anchor;
   } else {
-    const [, end] = Range.edges(range)
-    const pointRef = Editor.pointRef(editor, end)
-    Transforms.delete(editor, { at: range })
-    return pointRef.unref()
+    const [, end] = Range.edges(range);
+    const pointRef = Editor.pointRef(editor, end);
+    Transforms.delete(editor, { at: range });
+    return pointRef.unref();
   }
-}
+};
 
 const matchPath = (editor: Editor, path: Path): ((node: Node) => boolean) => {
-  const [node] = Editor.node(editor, path)
-  return n => n === node
-}
+  const [node] = Editor.node(editor, path);
+  return (n) => n === node;
+};

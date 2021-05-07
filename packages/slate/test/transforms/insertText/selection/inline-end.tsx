@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import { jsx } from '../../..'
+import { jsx } from '../../..';
 
-export const run = editor => {
-  editor.insertText('four')
-}
+export const run = (editor) => {
+  editor.insertText('four');
+};
 export const input = (
   <editor>
     <block>
@@ -15,7 +15,7 @@ export const input = (
       three
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -26,4 +26,4 @@ export const output = (
       three
     </block>
   </editor>
-)
+);

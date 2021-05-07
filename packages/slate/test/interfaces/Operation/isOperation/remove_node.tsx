@@ -1,4 +1,4 @@
-import { Operation } from '@moonship-fe/slate'
+import { Operation } from '@moonship-fe/slate';
 
 export const input = {
   type: 'remove_node',
@@ -6,8 +6,8 @@ export const input = {
   node: {
     children: [],
   },
-}
-export const test = value => {
-  return Operation.isOperation(value)
-}
-export const output = true
+};
+export const test = (value) => {
+  return Operation.isOperation(value);
+};
+export const output = true;

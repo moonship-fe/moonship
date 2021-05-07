@@ -1,4 +1,4 @@
-import { Operation, Point } from '..'
+import { Operation, Point } from '..';
 
 /**
  * `PointRef` objects keep a specific point in a document synced over time as new
@@ -7,13 +7,13 @@ import { Operation, Point } from '..'
  */
 
 export interface PointRef {
-  current: Point | null
-  affinity: 'forward' | 'backward' | null
-  unref(): Point | null
+  current: Point | null;
+  affinity: 'forward' | 'backward' | null;
+  unref(): Point | null;
 }
 
 export interface PointRefInterface {
-  transform: (ref: PointRef, op: Operation) => void
+  transform: (ref: PointRef, op: Operation) => void;
 }
 
 export const PointRef: PointRefInterface = {
@@ -22,17 +22,17 @@ export const PointRef: PointRefInterface = {
    */
 
   transform(ref: PointRef, op: Operation): void {
-    const { current, affinity } = ref
+    const { current, affinity } = ref;
 
     if (current == null) {
-      return
+      return;
     }
 
-    const point = Point.transform(current, op, { affinity })
-    ref.current = point
+    const point = Point.transform(current, op, { affinity });
+    ref.current = point;
 
     if (point == null) {
-      ref.unref()
+      ref.unref();
     }
   },
-}
+};

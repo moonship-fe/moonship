@@ -1,4 +1,4 @@
-import { Range } from '@moonship-fe/slate'
+import { Range } from '@moonship-fe/slate';
 
 export const input = {
   anchor: {
@@ -10,8 +10,8 @@ export const input = {
     offset: 0,
   },
   custom: 'value',
-}
-export const test = value => {
-  return Range.isRange(value)
-}
-export const output = true
+};
+export const test = (value) => {
+  return Range.isRange(value);
+};
+export const output = true;

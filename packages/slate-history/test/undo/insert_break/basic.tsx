@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { Editor } from '@moonship-fe/slate'
-import { jsx } from '../..'
+import { Editor } from '@moonship-fe/slate';
+import { jsx } from '../..';
 
-export const run = editor => {
-  editor.insertBreak()
-}
+export const run = (editor) => {
+  editor.insertBreak();
+};
 export const input = (
   <editor>
     <block>
@@ -15,5 +15,5 @@ export const input = (
       <block>two</block>
     </block>
   </editor>
-)
-export const output = input
+);
+export const output = input;

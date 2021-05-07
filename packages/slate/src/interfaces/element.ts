@@ -1,5 +1,5 @@
-import isPlainObject from 'is-plain-object'
-import { Editor, Node, Path, Descendant, ExtendedType, Ancestor } from '..'
+import isPlainObject from 'is-plain-object';
+import { Editor, Node, Path, Descendant, ExtendedType, Ancestor } from '..';
 
 /**
  * `Element` objects are a type of node in a Slate document that contain other
@@ -8,17 +8,17 @@ import { Editor, Node, Path, Descendant, ExtendedType, Ancestor } from '..'
  */
 
 export interface BaseElement {
-  children: Descendant[]
+  children: Descendant[];
 }
 
-export type Element = ExtendedType<'Element', BaseElement>
+export type Element = ExtendedType<'Element', BaseElement>;
 
 export interface ElementInterface {
-  isAncestor: (value: any) => value is Ancestor
-  isElement: (value: any) => value is Element
-  isElementList: (value: any) => value is Element[]
-  isElementProps: (props: any) => props is Partial<Element>
-  matches: (element: Element, props: Partial<Element>) => boolean
+  isAncestor: (value: any) => value is Ancestor;
+  isElement: (value: any) => value is Element;
+  isElementList: (value: any) => value is Element[];
+  isElementProps: (props: any) => props is Partial<Element>;
+  matches: (element: Element, props: Partial<Element>) => boolean;
 }
 
 export const Element: ElementInterface = {
@@ -27,7 +27,7 @@ export const Element: ElementInterface = {
    */
 
   isAncestor(value: any): value is Ancestor {
-    return isPlainObject(value) && Node.isNodeList(value.children)
+    return isPlainObject(value) && Node.isNodeList(value.children);
   },
 
   /**
@@ -39,7 +39,7 @@ export const Element: ElementInterface = {
       isPlainObject(value) &&
       Node.isNodeList(value.children) &&
       !Editor.isEditor(value)
-    )
+    );
   },
 
   /**
@@ -47,7 +47,7 @@ export const Element: ElementInterface = {
    */
 
   isElementList(value: any): value is Element[] {
-    return Array.isArray(value) && value.every(val => Element.isElement(val))
+    return Array.isArray(value) && value.every((val) => Element.isElement(val));
   },
 
   /**
@@ -55,7 +55,7 @@ export const Element: ElementInterface = {
    */
 
   isElementProps(props: any): props is Partial<Element> {
-    return (props as Partial<Element>).children !== undefined
+    return (props as Partial<Element>).children !== undefined;
   },
 
   /**
@@ -68,21 +68,21 @@ export const Element: ElementInterface = {
   matches(element: Element, props: Partial<Element>): boolean {
     for (const key in props) {
       if (key === 'children') {
-        continue
+        continue;
       }
 
       if (element[key] !== props[key]) {
-        return false
+        return false;
       }
     }
 
-    return true
+    return true;
   },
-}
+};
 
 /**
  * `ElementEntry` objects refer to an `Element` and the `Path` where it can be
  * found inside a root node.
  */
 
-export type ElementEntry = [Element, Path]
+export type ElementEntry = [Element, Path];

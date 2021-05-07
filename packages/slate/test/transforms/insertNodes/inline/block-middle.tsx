@@ -1,15 +1,15 @@
 /** @jsx jsx */
-import { Transforms } from '@moonship-fe/slate'
-import { jsx } from '../../..'
+import { Transforms } from '@moonship-fe/slate';
+import { jsx } from '../../..';
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.insertNodes(
     editor,
     <inline void>
       <text />
     </inline>
-  )
-}
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -18,7 +18,7 @@ export const input = (
       rd
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -29,4 +29,4 @@ export const output = (
       rd
     </block>
   </editor>
-)
+);

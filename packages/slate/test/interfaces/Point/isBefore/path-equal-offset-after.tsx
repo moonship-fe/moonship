@@ -1,4 +1,4 @@
-import { Point } from '@moonship-fe/slate'
+import { Point } from '@moonship-fe/slate';
 
 export const input = {
   point: {
@@ -9,8 +9,8 @@ export const input = {
     path: [0, 1],
     offset: 3,
   },
-}
+};
 export const test = ({ point, another }) => {
-  return Point.isBefore(point, another)
-}
-export const output = false
+  return Point.isBefore(point, another);
+};
+export const output = false;

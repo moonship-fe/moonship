@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@moonship-fe/slate-hyperscript'
+import { jsx } from '@moonship-fe/slate-hyperscript';
 
 export const input = (
   <editor>
@@ -12,7 +12,7 @@ export const input = (
       <focus />
     </element>
   </editor>
-)
+);
 export const output = {
   children: [
     {
@@ -40,4 +40,4 @@ export const output = {
       offset: 3,
     },
   },
-}
+};

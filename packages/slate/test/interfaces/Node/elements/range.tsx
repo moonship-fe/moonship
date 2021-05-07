@@ -1,6 +1,6 @@
 /** @jsx jsx  */
-import { Node } from '@moonship-fe/slate'
-import { jsx } from '@moonship-fe/slate-hyperscript'
+import { Node } from '@moonship-fe/slate';
+import { jsx } from '@moonship-fe/slate-hyperscript';
 
 export const input = (
   <editor>
@@ -11,8 +11,8 @@ export const input = (
       <text key="d" />
     </element>
   </editor>
-)
-export const test = value => {
+);
+export const test = (value) => {
   return Array.from(
     Node.elements(value, {
       range: {
@@ -26,8 +26,8 @@ export const test = value => {
         },
       },
     })
-  )
-}
+  );
+};
 export const output = [
   [
     <element>
@@ -38,4 +38,4 @@ export const output = [
     </element>,
     [0],
   ],
-]
+];

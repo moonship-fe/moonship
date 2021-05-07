@@ -1,12 +1,12 @@
-import { Text } from '@moonship-fe/slate'
+import { Text } from '@moonship-fe/slate';
 
 export const input = {
   textNodeA: { text: 'some text', bold: true },
   textNodeB: { text: 'diff text', bold: true },
-}
+};
 
 export const test = ({ textNodeA, textNodeB }) => {
-  return Text.equals(textNodeA, textNodeB, { loose: true })
-}
+  return Text.equals(textNodeA, textNodeB, { loose: true });
+};
 
-export const output = true
+export const output = true;

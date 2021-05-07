@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { Transforms } from '@moonship-fe/slate'
-import { jsx } from '../../..'
+import { Transforms } from '@moonship-fe/slate';
+import { jsx } from '../../..';
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.insertFragment(
     editor,
     <fragment>
@@ -10,8 +10,8 @@ export const run = editor => {
       <inline>two</inline>
       <inline>three</inline>
     </fragment>
-  )
-}
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -24,7 +24,7 @@ export const input = (
       <text />
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -44,4 +44,4 @@ export const output = (
       <text />
     </block>
   </editor>
-)
+);

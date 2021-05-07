@@ -1,4 +1,4 @@
-import { Element } from '@moonship-fe/slate'
+import { Element } from '@moonship-fe/slate';
 
 export const input = [
   {
@@ -21,8 +21,8 @@ export const input = [
     onChange() {},
     removeMark() {},
   },
-]
-export const test = value => {
-  return Element.isElementList(value)
-}
-export const output = false
+];
+export const test = (value) => {
+  return Element.isElementList(value);
+};
+export const output = false;

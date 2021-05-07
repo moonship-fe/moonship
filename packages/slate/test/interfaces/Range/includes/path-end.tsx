@@ -1,4 +1,4 @@
-import { Range } from '@moonship-fe/slate'
+import { Range } from '@moonship-fe/slate';
 
 export const input = {
   range: {
@@ -12,8 +12,8 @@ export const input = {
     },
   },
   target: [3],
-}
+};
 export const test = ({ range, target }) => {
-  return Range.includes(range, target)
-}
-export const output = true
+  return Range.includes(range, target);
+};
+export const output = true;
