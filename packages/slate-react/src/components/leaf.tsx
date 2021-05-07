@@ -60,6 +60,7 @@ const Leaf = (props: {
   if (leaf[PLACEHOLDER_SYMBOL]) {
     const placeholderProps: RenderPlaceholderProps = {
       children: leaf.placeholder,
+      id: 'moonship-placeholder',
       attributes: {
         'data-slate-placeholder': true,
         style: {

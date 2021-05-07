@@ -123,6 +123,12 @@ export const Editable = (props: EditableProps) => {
   const editor = useSlate();
   const ref = useRef<HTMLDivElement>(null);
 
+  const noInputValue =
+    placeholder &&
+    editor.children.length === 1 &&
+    Array.from(Node.texts(editor)).length === 1 &&
+    Node.string(editor) === '';
+
   // Update internal state on each render.
   IS_READ_ONLY.set(editor, readOnly);
 
@@ -482,12 +488,7 @@ export const Editable = (props: EditableProps) => {
 
   const decorations = decorate([editor, []]);
 
-  if (
-    placeholder &&
-    editor.children.length === 1 &&
-    Array.from(Node.texts(editor)).length === 1 &&
-    Node.string(editor) === ''
-  ) {
+  if (noInputValue) {
     const start = Editor.start(editor, []);
     decorations.push({
       [PLACEHOLDER_SYMBOL]: true,
@@ -534,9 +535,13 @@ export const Editable = (props: EditableProps) => {
             ...style,
           }}
           onInput={useCallback(() => {
-            document.getElementById('moonship-placeholder').style.display =
-              'none';
-          }, [])}
+            const placeholderDOM = document.getElementById(
+              'moonship-placeholder'
+            );
+            if (noInputValue && placeholderDOM) {
+              placeholderDOM.style.display = 'none';
+            }
+          }, [noInputValue])}
           onBeforeInput={useCallback(
             (event: React.FormEvent<HTMLDivElement>) => {
               // COMPAT: Certain browsers don't support the `beforeinput` event, so we
@@ -1078,7 +1083,7 @@ export const Editable = (props: EditableProps) => {
  */
 export type RenderPlaceholderProps = {
   children: any;
-  className: string;
+  id: string;
   attributes: {
     'data-slate-placeholder': boolean;
     dir?: 'rtl';
