@@ -87,7 +87,7 @@
     "no-new-object": "error",
     "no-new-symbol": "error",
     "no-path-concat": "error",
-    "no-redeclare": "error",
+    "no-redeclare": "off",
     "no-regex-spaces": "error",
     "no-sequences": "error",
     "no-tabs": "error",
